@@ -1,9 +1,10 @@
 import flask
 from flask import Flask, render_template
-from flask import request, jsonify
+from flask import request, jsonify, redirect, url_for
 
 app = flask.Flask(__name__)
 app.config["DEBUG"]=True
+app.secret_key = b'azerty'
 
 # Create some test data for our catalog in the form of a list of dictionaries.
 books = [
@@ -53,5 +54,26 @@ def api_id():
     # Use the jsonify function from Flask to convert our list of
     # Python dictionaries to the JSON format.
     return render_template("booksall.html", books=results)
+
+@app.route('/login', methods=['GET', 'POST'])
+
+def autor():
+
+    if request.method == "POST":
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        if username != "admin" or password != "admin":
+            return redirect(url_for('autor'))
+        else:
+            return redirect(url_for('admin_page'))
+
+    return render_template("login.html")
+
+@app.route('/apres_log', methods=['GET'])
+
+def admin_page():
+    return render_template('apres_log.html')
+
 
 app.run()
