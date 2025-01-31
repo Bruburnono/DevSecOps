@@ -1,11 +1,17 @@
 import flask
-from flask import Flask, render_template
-from flask import request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
+from flask import request, jsonify
+from flask_mysqldb import MySQL
 
 app = flask.Flask(__name__)
 app.config["DEBUG"]=True
-app.secret_key = b'azerty'
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = 'base'
+mysql = MySQL(app)
 
+app.secret_key= b'\xe6\xe3\\\x0bp\xe6\x9f\xfcT\xfa\xa1\r<\xab\xf9\x1f\x87\xad\xb8\xf0\x17\x9f\x9c\xbd'
 # Create some test data for our catalog in the form of a list of dictionaries.
 books = [
     {'id': 0,
@@ -34,6 +40,62 @@ def home():
 def api_all():
     return render_template("booksall.html", books=books)
 
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT * FROM users WHERE username=%s AND password=%s", (username, password))
+        user = cursor.fetchone()
+        if user:
+            session['username'] = username
+            return redirect(url_for('intermed'))
+        else:
+            return "Login Failed. Please check your username and password."
+    return render_template('login.html')
+
+@app.route('/intermed', methods=['GET'])
+def intermed():
+    if 'username' in session:
+        # La page intermédiaire affichera un message de bienvenue et un lien vers d'autres pages
+        return render_template('ind.html', username=session['username'])
+    return redirect(url_for('login'))  # Si l'utilisateur n'est pas connecté, redirige vers la page de connexion
+
+
+@app.route('/intermed/dashboard', methods=['GET', 'POST'])
+def dashboard():
+    if 'username' in session:
+        if request.method == 'POST':  # Si c'est une requête POST
+            note = request.form['grades']  # Récupère la note du formulaire
+            course = request.form['course']  # Récupère le cours du formulaire
+            username = request.form['username']  # Récupère le nom d'utilisateur de la session
+
+            cursor = mysql.connection.cursor()
+            # Insère la note, le nom d'utilisateur et le cours dans la table 'grades'
+            cursor.execute("INSERT INTO grades (grade, username, course) VALUES (%s, %s, %s)", (note, username, course))
+            mysql.connection.commit()  # Applique les modifications dans la base de données
+            cursor.close()  # Ferme le curseur
+            return redirect(url_for('dashboard'))  # Redirige vers la même page après soumission
+        
+        return render_template("prof.html")  # Affiche le formulaire HTML
+    
+    return redirect(url_for('login'))  # Si l'utilisateur n'est pas connecté, redirige vers la page de connexion
+
+@app.route('/intermed/grades', methods=['GET'])
+def grades():
+    if 'username' in session:
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT * FROM grades")
+        all_grades = cursor.fetchall()  # Récupère toutes les lignes de la table grades
+        cursor.close()
+
+        return render_template("grades.html", grades=all_grades)  # Envoie les données à grades.html
+    
+    return redirect(url_for('login'))  # Si l'utilisateur n'est pas connecté, redirige vers la page de connexion
+
+
 @app.route('/api/v1/resources/books', methods=['GET'])
 def api_id():
     # Check if an ID was provided as part of the URL.
@@ -54,26 +116,5 @@ def api_id():
     # Use the jsonify function from Flask to convert our list of
     # Python dictionaries to the JSON format.
     return render_template("booksall.html", books=results)
-
-@app.route('/login', methods=['GET', 'POST'])
-
-def autor():
-
-    if request.method == "POST":
-        username = request.form.get('username')
-        password = request.form.get('password')
-
-        if username != "admin" or password != "admin":
-            return redirect(url_for('autor'))
-        else:
-            return redirect(url_for('admin_page'))
-
-    return render_template("login.html")
-
-@app.route('/apres_log', methods=['GET'])
-
-def admin_page():
-    return render_template('apres_log.html')
-
 
 app.run()
