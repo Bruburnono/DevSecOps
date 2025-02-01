@@ -7,7 +7,7 @@ app = flask.Flask(__name__)
 app.config["DEBUG"]=True
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_PASSWORD'] = 'root'
 app.config['MYSQL_DB'] = 'base'
 mysql = MySQL(app)
 
@@ -51,39 +51,45 @@ def login():
         user = cursor.fetchone()
         if user:
             session['username'] = username
-            return redirect(url_for('intermed'))
+            return redirect(url_for('dashboardprof'))
         else:
             return "Login Failed. Please check your username and password."
     return render_template('login.html')
 
-@app.route('/intermed', methods=['GET'])
-def intermed():
-    if 'username' in session:
-        # La page intermédiaire affichera un message de bienvenue et un lien vers d'autres pages
-        return render_template('ind.html', username=session['username'])
-    return redirect(url_for('login'))  # Si l'utilisateur n'est pas connecté, redirige vers la page de connexion
 
 
-@app.route('/intermed/dashboard', methods=['GET', 'POST'])
-def dashboard():
-    if 'username' in session:
-        if request.method == 'POST':  # Si c'est une requête POST
-            note = request.form['grades']  # Récupère la note du formulaire
-            course = request.form['course']  # Récupère le cours du formulaire
-            username = request.form['username']  # Récupère le nom d'utilisateur de la session
+@app.route('/dashboardprof', methods=['GET'])
+def dashboardprof():
+    if 'username' in session: 
+        return render_template('sisiprof.html', username=session['username'])
+    return redirect(url_for('login'))
 
-            cursor = mysql.connection.cursor()
-            # Insère la note, le nom d'utilisateur et le cours dans la table 'grades'
-            cursor.execute("INSERT INTO grades (grade, username, course) VALUES (%s, %s, %s)", (note, username, course))
-            mysql.connection.commit()  # Applique les modifications dans la base de données
-            cursor.close()  # Ferme le curseur
-            return redirect(url_for('dashboard'))  # Redirige vers la même page après soumission
+@app.route('/dashboardeleve', methods=['GET'])
+def dashboardeleve():
+    if 'username' in session: 
+        return render_template('sisieleve.html', username=session['username'])
+    return redirect(url_for('login'))
+
+@app.route('/teacher', methods=['GET', 'POST'])
+def teach():
+        if 'username' in session:
+            if request.method == 'POST':  # Si c'est une requête POST
+                print("Formulaire soumis")  # Ajoute cette ligne pour tester
+                username = request.form['username']  # Récupère le nom d'utilisateur de la session
+                course = request.form['course']  # Récupère le cours du formulaire
+                note = request.form['grade']  # Récupère la note du formulaire
+                
+                cursor = mysql.connection.cursor()
+                # Insère la note, le nom d'utilisateur et le cours dans la table 'grades'
+                cursor.execute("INSERT INTO grades (username,course,grade) VALUES (%s, %s, %s)", (username, course,note))
+                mysql.connection.commit()  # Applique les modifications dans la base de données
+                cursor.close()  # Ferme le curseur
+                return redirect(url_for('teach'))  # Redirige vers la même page après soumission
         
-        return render_template("prof.html")  # Affiche le formulaire HTML
-    
-    return redirect(url_for('login'))  # Si l'utilisateur n'est pas connecté, redirige vers la page de connexion
+            return render_template("teacher.html")  # Affiche le formulaire HTML
+        return redirect(url_for('login'))  # Si l'utilisateur n'est pas connecté, redirige vers la page de connexion
 
-@app.route('/intermed/grades', methods=['GET'])
+@app.route('/grades', methods=['GET'])
 def grades():
     if 'username' in session:
         cursor = mysql.connection.cursor()
@@ -117,4 +123,7 @@ def api_id():
     # Python dictionaries to the JSON format.
     return render_template("booksall.html", books=results)
 
+
 app.run()
+
+
