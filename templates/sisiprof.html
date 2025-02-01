@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Pronote - Exemple</title>
+
+    <!-- Lien vers le CSS de Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Style personnalisé pour cette page -->
+    <style>
+        .navbar {
+            background-color: #1d72b8;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 250px;
+            background-color: #f8f9fa;
+            padding-top: 20px;
+        }
+        .sidebar a {
+            text-decoration: none;
+            color: #333;
+            padding: 10px;
+            display: block;
+        }
+        .sidebar a:hover {
+            background-color: #ddd;
+        }
+        .main-content {
+            margin-left: 260px;
+            padding: 20px;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Barre de navigation principale -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Pronote</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Devoirs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/teacher">Notes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Agenda</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Profil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Déconnexion</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar de navigation -->
+    <div class="sidebar">
+        <a href="#">Tableau de bord</a>
+        <a href="#">Emploi du temps</a>
+        <a href="#">Absences</a>
+        <a href="#">Bulletin</a>
+        <a href="#">Messages</a>
+        <a href="#">Réunions</a>
+    </div>
+
+    <!-- Contenu principal -->
+    <div class="main-content">
+        <div class="container">
+            <h2>Bienvenue sur votre espace Pronote</h2>
+
+            <div class="row">
+                <!-- Card pour les notes -->
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Mes Notes</h5>
+                            <p class="card-text">Consultez vos dernières notes et évaluations.</p>
+                            <a href="/teacher" class="btn btn-primary">Voir les notes</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card pour les devoirs -->
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Mes Devoirs</h5>
+                            <p class="card-text">Consultez vos devoirs à faire.</p>
+                            <a href="#" class="btn btn-primary">Voir les devoirs</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card pour l'emploi du temps -->
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Mon Emploi du Temps</h5>
+                            <p class="card-text">Consultez votre emploi du temps quotidien.</p>
+                            <a href="#" class="btn btn-primary">Voir l'emploi du temps</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row">
+                <!-- Tableau pour les absences -->
+                <div class="col-md-12">
+                    <h4>Mes Absences</h4>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Matière</th>
+                                <th>Justifiée</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>10/01/2025</td>
+                                <td>Mathématiques</td>
+                                <td>Non</td>
+                            </tr>
+                            <tr>
+                                <td>15/01/2025</td>
+                                <td>Français</td>
+                                <td>Oui</td>
+                            </tr>
+                            <tr>
+                                <td>20/01/2025</td>
+                                <td>Physique</td>
+                                <td>Non</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts JavaScript de Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
