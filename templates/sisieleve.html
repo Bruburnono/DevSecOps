@@ -13,6 +13,11 @@
     <style>
         .navbar {
             background-color: #1d72b8;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            z-index: 1000;
         }
         .sidebar {
             position: fixed;
@@ -33,7 +38,6 @@
             background-color: #ddd;
         }
         .main-content {
-            margin-left: 260px;
             padding: 20px;
         }
         .card {
@@ -44,7 +48,7 @@
 
 <body>
 
-    <!-- Barre de navigation principale -->
+    <!-- Nouvelle Barre de navigation (en haut à droite) -->
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Pronote</a>
@@ -58,13 +62,16 @@
                         <a class="nav-link active" aria-current="page" href="#">Accueil</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="#">Emploi du temps</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Messages</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="#">Devoirs</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/grades">Notes</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Agenda</a>
+                        <a class="nav-link" href="/teacher">Notes</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Profil</a>
@@ -77,15 +84,6 @@
         </div>
     </nav>
 
-    <!-- Sidebar de navigation -->
-    <div class="sidebar">
-        <a href="#">Tableau de bord</a>
-        <a href="#">Emploi du temps</a>
-        <a href="#">Absences</a>
-        <a href="#">Bulletin</a>
-        <a href="#">Messages</a>
-        <a href="#">Réunions</a>
-    </div>
 
     <!-- Contenu principal -->
     <div class="main-content">
