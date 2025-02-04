@@ -75,7 +75,7 @@ def dashboardeleve():
         return render_template('sisieleve.html', username=session['username'])
     return redirect(url_for('login'))
 
-@app.route('/dashboaradmin', methods=['GET'])
+@app.route('/dashboardadmin', methods=['GET'])
 def dashboardadmin():
     if 'username' in session: 
         return render_template('admin.html', username=session['username'])
@@ -89,7 +89,7 @@ def add_user():
     cursor = mysql.connection.cursor()
     cursor.execute("INSERT INTO users (username, password, role) VALUE (%s,%s,%s)", (new_username, new_password, new_role))
     mysql.connection.commit()
-    return render_template('admin.html', username=session['username'])
+    return redirect('/dashboardadmin')
 
 @app.route('/teacher', methods=['GET', 'POST'])
 def teach():
