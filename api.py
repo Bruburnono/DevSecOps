@@ -77,8 +77,12 @@ def dashboardeleve():
 
 @app.route('/dashboardadmin', methods=['GET'])
 def dashboardadmin():
-    if 'username' in session: 
-        return render_template('admin.html', username=session['username'])
+    if 'username' in session:
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT username, role FROM users")
+        user = cursor.fetchall()
+        cursor.close
+        return render_template('admin.html', username=session['username'], users=user)
     return redirect(url_for('login'))
 
 @app.route('/dashboardadmin/add_user', methods=['POST'])
