@@ -81,6 +81,16 @@ def dashboardadmin():
         return render_template('admin.html', username=session['username'])
     return redirect(url_for('login'))
 
+@app.route('/dashboardadmin/add_user', methods=['POST'])
+def add_user():
+    new_username = request.form['username']
+    new_password = request.form['password']
+    new_role = request.form ['role']
+    cursor = mysql.connection.cursor()
+    cursor.execute("INSERT INTO users (username, password, role) VALUE (%s,%s,%s)", (new_username, new_password, new_role))
+    mysql.connection.commit()
+    return render_template('admin.html', username=session['username'])
+
 @app.route('/teacher', methods=['GET', 'POST'])
 def teach():
         if 'username' in session:
