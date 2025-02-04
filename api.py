@@ -102,7 +102,7 @@ def teach():
                 
                 cursor = mysql.connection.cursor()
                 # Insère la note, le nom d'utilisateur et le cours dans la table 'grades'
-                cursor.execute("INSERT INTO grades (username,cours,grade) VALUES (%s, %s, %s)", (username, course,note))
+                cursor.execute("INSERT INTO grades (username,course,grade) VALUES (%s, %s, %s)", (username, course,note))
                 mysql.connection.commit()  # Applique les modifications dans la base de données
                 cursor.close()  # Ferme le curseur
                 return redirect(url_for('teach'))  # Redirige vers la même page après soumission
