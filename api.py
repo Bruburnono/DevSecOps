@@ -50,8 +50,13 @@ def login():
         cursor.execute("SELECT * FROM users WHERE username=%s AND password=%s", (username, password))
         user = cursor.fetchone()
         if user:
-            session['username'] = username
-            return redirect(url_for('dashboardprof'))
+            session['username'] = user[1]
+            if user[3] == 'prof':
+                return redirect(url_for('dashboardprof'))
+            elif user[3] == 'eleve':
+                return redirect(url_for('dashboardeleve'))
+            elif user[3] == 'admin':
+                return redirect(url_for('dashboardadmin'))
         else:
             return "Login Failed. Please check your username and password."
     return render_template('login.html')
@@ -68,6 +73,12 @@ def dashboardprof():
 def dashboardeleve():
     if 'username' in session: 
         return render_template('sisieleve.html', username=session['username'])
+    return redirect(url_for('login'))
+
+@app.route('/dashboaradmin', methods=['GET'])
+def dashboardadmin():
+    if 'username' in session: 
+        return render_template('admin.html', username=session['username'])
     return redirect(url_for('login'))
 
 @app.route('/teacher', methods=['GET', 'POST'])
