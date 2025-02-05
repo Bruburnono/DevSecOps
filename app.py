@@ -97,6 +97,16 @@ def dashboard_admin():
         return render_template('admin.html', users=users)
     return redirect(url_for('login'))
 
+@app.route('/dashboard_admin/delete_user', methods=['POST'])
+def delete_user():
+    if 'username' in session and 'username' in request.form:
+        username = request.form['username']        
+        cursor = mysql.connection.cursor()
+        cursor.execute("DELETE FROM users WHERE username = %s", (username,))
+        mysql.connection.commit()
+        cursor.close()
+    return redirect('/dashboard_admin')
+
 @app.route('/dashboard_admin/add_user', methods=['POST'])
 def add_user():
     new_username = request.form['username']
