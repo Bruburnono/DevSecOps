@@ -150,6 +150,10 @@
                         <tr>
                             <td>{{ user[0] }}</td>
                             <td>{{ user[1] }}</td>
+                            <td><form action="/dashboard_admin/delete_user" method="POST" onsubmit="return confirm('Voulez-vous vraiment supprimer cet utilisateur ?');">
+                                <input type="hidden" name="username" value="{{ user[0] }}">
+                                <button type="submit" class="button">Supprimer</button>
+                            </form></td>
                         </tr>
                         {% endfor %}
                     </tbody>
