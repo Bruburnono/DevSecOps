@@ -1,5 +1,5 @@
 import flask
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask import request, jsonify
 from flask_mysqldb import MySQL
 from flask_wtf import CSRFProtect
@@ -50,9 +50,9 @@ def login():
                 if user[3] == "student":
                     return redirect(url_for('dashboard_student'))
             else:
-                return "Mot de passe incorrect", 401
+                flash('Invalid password', 'error')
         else:
-            return "Utilisateur non trouvé", 404
+            flash('User not found', 'error')
     return render_template('login.html')
 
 
