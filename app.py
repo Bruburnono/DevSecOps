@@ -1,5 +1,5 @@
 import flask
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, abort, render_template_string
 from flask import request, jsonify
 from flask_mysqldb import MySQL
 import bcrypt
@@ -28,9 +28,13 @@ def verify_password(stored_hash, entered_password):
     return bcrypt.checkpw(entered_password.encode(), stored_hash.encode())
 
 
+@app.errorhandler(403)
+def forbidden_error(error):
+    return render_template_string('<h1>Forbidden</h1><h1>Bouge de la mgl</h1>'), 403
+
 @app.route('/', methods=['GET'])
 def home():
-    return render_template("login.html")
+    return render_template("home.html")
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -65,32 +69,49 @@ def login():
 
 @app.route('/dashboard_teacher', methods=['GET'])
 def dashboard_teacher():
-    if 'role' in session: 
-        return render_template('dashboard_teacher.html')
+    if 'secret_key' and 'role' in session: 
+        session_secret_key = session['secret_key']
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT secret_key, role, username FROM honeypot WHERE secret_key = %s", (session_secret_key,))
+        user_data = cursor.fetchone()
+        cursor.close()
+        if user_data and session.get('role') == 'teacher' : 
+            return render_template('dashboard_teacher2.html',user = user_data[2])
+        else:
+            abort(403)
+    else:
+        abort(403)
     return redirect(url_for('login'))
 
 @app.route('/dashboard_student', methods=['GET'])
 def dashboard_student():
-    if 'username' in session: 
-        return render_template('dashboard_student.html')
+    if 'secret_key' and 'role' in session: 
+            session_secret_key = session['secret_key']
+            cursor = mysql.connection.cursor()
+            cursor.execute("SELECT secret_key, role, username FROM honeypot WHERE secret_key = %s", (session_secret_key,))
+            user_data = cursor.fetchone()
+            cursor.close()
+            if user_data and session.get('role') == 'student' : 
+                return render_template('dashboard_student.html', user = user_data[2])
     return redirect(url_for('login'))
 
 @app.route('/dashboard_admin', methods=['GET'])
 def dashboard_admin():
     if 'secret_key' in session:
         session_secret_key = session['secret_key']
-        session_role = session.get('role')
         cursor = mysql.connection.cursor()
         cursor.execute("SELECT secret_key FROM honeypot WHERE id = 1")
         user_data = cursor.fetchone()
         cursor.close()
-        if session_secret_key == user_data[0] and session_role == 'admin':  
+        if user_data and session.get('role') == 'admin':  
             cursor = mysql.connection.cursor()
             cursor.execute("SELECT username, role FROM users")
             users = cursor.fetchall()
             cursor.close()
             return render_template('admin.html', user_data=user_data, users=users)
-    return redirect(url_for('login')) 
+        else:
+            return abort(403)
+    return abort(403)
 
 
 @app.route('/dashboard_admin/add_user', methods=['POST'])
@@ -101,35 +122,56 @@ def add_user():
     cursor = mysql.connection.cursor()
     cursor.execute("INSERT INTO users (username, password, role) VALUE (%s,%s,%s)", (new_username, new_password, new_role))
     sisi = generate_secure_key()
-    cursor.execute("INSERT INTO honeypot (secret_key, role) VALUE (%s,%s)", (sisi, new_role))
+    cursor.execute("INSERT INTO honeypot (secret_key, role, username) VALUE (%s,%s,%s)", (sisi, new_role, new_username))
     mysql.connection.commit()
     return redirect('/dashboard_admin')
 
 @app.route('/teacher', methods=['GET', 'POST'])
-def teach():
-        if 'username' in session:
-            if request.method == 'POST': 
-                print("Formulaire soumis")
-                username = request.form['username']
-                course = request.form['course'] 
-                note = request.form['grade']                 
-                cursor = mysql.connection.cursor()                
-                cursor.execute("INSERT INTO grades (username,course,grade) VALUES (%s, %s, %s)", (username, course,note))
-                mysql.connection.commit()  
-                cursor.close()
-                return redirect(url_for('teach')) 
-        
-            return render_template("teacher.html") 
-        return redirect(url_for('login')) 
+def teacher():
+        if 'secret_key' and 'role' in session: 
+            session_secret_key = session['secret_key']
+            print(session_secret_key)
+            cursor = mysql.connection.cursor()
+            cursor.execute("SELECT secret_key, role, username FROM honeypot WHERE secret_key = %s", (session_secret_key,))
+            user_data = cursor.fetchone()
+            cursor.close()
+            cursor = mysql.connection.cursor()
+            cursor.execute("SELECT username FROM honeypot WHERE role = 'student'")
+            students = cursor.fetchall()
+            student_list = [student[0] for student in students]
+            cursor.close()
+            if user_data and session.get('role') == 'teacher' : 
+                if request.method == 'POST': 
+                    print("Formulaire soumis")
+                    student = request.form['student']
+                    subject = request.form['course'] 
+                    note = request.form['grade']                 
+                    cursor = mysql.connection.cursor()                
+                    cursor.execute("INSERT INTO grades (teacher,student,subject,grade) VALUES (%s, %s, %s, %s)", (user_data[2], student, subject, note))
+                    mysql.connection.commit()  
+                    cursor.close()
+                    return redirect(url_for('teacher'))        
+                return render_template("teacher.html", students = student_list) 
+        else:
+            return abort(403)
 
 @app.route('/grades', methods=['GET'])
 def grades():
-    if 'username' in session:
+    if 'secret_key' and 'role' in session: 
+        session_secret_key = session['secret_key']
         cursor = mysql.connection.cursor()
-        cursor.execute("SELECT * FROM grades")
-        all_grades = cursor.fetchall()
+        cursor.execute("SELECT secret_key, role, username FROM honeypot WHERE secret_key = %s", (session_secret_key,))
+        user_data = cursor.fetchone()
         cursor.close()
-        return render_template("grades.html", grades=all_grades)
+        if user_data and session.get('role') == 'student' : 
+            cursor = mysql.connection.cursor()
+            cursor.execute("SELECT teacher, student, subject, grade FROM grades WHERE student = %s", (user_data[2],))
+            grades = cursor.fetchall()
+            return render_template("grades.html", grades=grades, student = user_data[2])
+        else:
+            abort(403)
+    else:
+        abort(403)
     return redirect(url_for('login'))  
 
 @app.route('/logout')
