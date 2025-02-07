@@ -113,7 +113,7 @@
     </nav>
 
     <div class="container">
-        <h2>Bienvenue sur le Dashboard Admin</h2>
+        <h2>Bienvenue, {{ users[0][0] }} ! Vous êtes un {{ users[0][1] }}.</h2>
         <div class="row">
             <!-- Formulaire pour ajouter un utilisateur -->
             <div class="col-md-4">
@@ -149,11 +149,7 @@
                         {% for user in users %}
                         <tr>
                             <td>{{ user[0] }}</td>
-                            <td>{{ user[1] }}</td>
-                            <td><form action="/dashboard_admin/delete_user" method="POST" onsubmit="return confirm('Voulez-vous vraiment supprimer cet utilisateur ?');">
-                                <input type="hidden" name="username" value="{{ user[0] }}">
-                                <button type="submit" class="button">Supprimer</button>
-                            </form></td>
+                            <td>{{ user[1] }}</td>                           
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -164,5 +160,4 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>
