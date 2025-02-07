@@ -1,9 +1,10 @@
 import flask
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session
 from flask import request, jsonify
 from flask_mysqldb import MySQL
-from flask_wtf import CSRFProtect
 import bcrypt
+import secrets 
+import string
 
 app = flask.Flask(__name__)
 app.config["DEBUG"]=True
@@ -14,9 +15,11 @@ app.config['MYSQL_DB'] = 'base'
 mysql = MySQL(app)
 
 app.secret_key= b'\xe6\xe3\\\x0bp\xe6\x9f\xfcT\xfa\xa1\r<\xab\xf9\x1f\x87\xad\xb8\xf0\x17\x9f\x9c\xbd'
-csrf = CSRFProtect(app)
-app.config['WTF_CSRF_ENABLED'] = True
 
+def generate_secure_key(length=50):
+    characters = string.ascii_letters + string.digits + "_+-/"
+    secure_key = ''.join(secrets.choice(characters) for _ in range(length))    
+    return secure_key
 
 def hash_password(password):
     return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
@@ -29,8 +32,6 @@ def verify_password(stored_hash, entered_password):
 def home():
     return render_template("login.html")
 
-
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -38,28 +39,33 @@ def login():
         password = request.form['password']
         cursor = mysql.connection.cursor()
         cursor.execute("SELECT * FROM users WHERE username=%s", (username,))
-        user = cursor.fetchone()
+        user = cursor.fetchone()     
         if user:
             if bcrypt.checkpw(password.encode('utf-8'), user[2].encode('utf-8')):
-                session['user_id'] = user[0]
-                session['username'] = user[1]
-                if user[3] == "admin":
-                    return redirect(url_for('dashboard_admin'))
-                if user[3] == "teacher":
-                    return redirect(url_for('dashboard_teacher'))
-                if user[3] == "student":
-                    return redirect(url_for('dashboard_student'))
+                cursor.execute("SELECT * FROM honeypot WHERE id=%s", (str(user[0])))
+                credentials = cursor.fetchone()
+                if credentials:
+                    session.clear()
+                    session['secret_key'] = credentials[1]
+                    session['role'] = credentials[2]
+                    if credentials[2] == "admin":
+                        return redirect(url_for('dashboard_admin'))
+                    if credentials[2] == "teacher":
+                        return redirect(url_for('dashboard_teacher'))
+                    if credentials[2] == "student":
+                        return redirect(url_for('dashboard_student'))
+                else:
+                    return "pas de clé", 401
             else:
-                flash('Invalid password', 'error')
+                return "Mot de passe incorrect", 401
         else:
-            flash('User not found', 'error')
+            return "Utilisateur non trouvé", 404
     return render_template('login.html')
-
 
 
 @app.route('/dashboard_teacher', methods=['GET'])
 def dashboard_teacher():
-    if 'username' in session: 
+    if 'role' in session: 
         return render_template('dashboard_teacher.html')
     return redirect(url_for('login'))
 
@@ -71,23 +77,21 @@ def dashboard_student():
 
 @app.route('/dashboard_admin', methods=['GET'])
 def dashboard_admin():
-    if 'username' in session:
+    if 'secret_key' in session:
+        session_secret_key = session['secret_key']
+        session_role = session.get('role')
         cursor = mysql.connection.cursor()
-        cursor.execute("SELECT username, role FROM users")
-        users = cursor.fetchall()
-        cursor.close
-        return render_template('admin.html', users=users)
-    return redirect(url_for('login'))
-
-@app.route('/dashboard_admin/delete_user', methods=['POST'])
-def delete_user():
-    if 'username' in session and 'username' in request.form:
-        username = request.form['username']        
-        cursor = mysql.connection.cursor()
-        cursor.execute("DELETE FROM users WHERE username = %s", (username,))
-        mysql.connection.commit()
+        cursor.execute("SELECT secret_key FROM honeypot WHERE id = 1")
+        user_data = cursor.fetchone()
         cursor.close()
-    return redirect('/dashboard_admin')
+        if session_secret_key == user_data[0] and session_role == 'admin':  
+            cursor = mysql.connection.cursor()
+            cursor.execute("SELECT username, role FROM users")
+            users = cursor.fetchall()
+            cursor.close()
+            return render_template('admin.html', user_data=user_data, users=users)
+    return redirect(url_for('login')) 
+
 
 @app.route('/dashboard_admin/add_user', methods=['POST'])
 def add_user():
@@ -96,6 +100,8 @@ def add_user():
     new_role = request.form ['role']
     cursor = mysql.connection.cursor()
     cursor.execute("INSERT INTO users (username, password, role) VALUE (%s,%s,%s)", (new_username, new_password, new_role))
+    sisi = generate_secure_key()
+    cursor.execute("INSERT INTO honeypot (secret_key, role) VALUE (%s,%s)", (sisi, new_role))
     mysql.connection.commit()
     return redirect('/dashboard_admin')
 
@@ -130,14 +136,5 @@ def grades():
 def logout():
     session.clear()
     return redirect(url_for('login'))
-
-@app.route('/api/v1/resources/books', methods=['GET'])
-def api_id():
-    if 'id' in request.args:
-        ID = int(request.args['id'])
-    else:
-        return "Error: No id field provided. Please specify an id."
-    results = []
-
 
 app.run()
