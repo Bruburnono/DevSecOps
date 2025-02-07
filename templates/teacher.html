@@ -22,10 +22,15 @@
     <div class="container mt-4">
     
         <h2>Modifier les Notes</h2>
-        <form action="{{ url_for('teach') }}" method="POST">
+        <form action="{{ url_for('teacher') }}" method="POST">
             <div class="mb-3">
-                <label for=username class="form-label">Nom de l'élève</label>
-                <input type="text" class="form-control" id="username"  name ="username" placeholder="Entrez le nom de l'élève">
+                <label for="student" class="block text-gray-700 font-medium">Étudiant :</label>
+                <select id="student" name="student" class="w-full mt-2 p-2 border rounded-lg">
+                    {% for student in students %}
+                        <option value="{{ student }}">{{ student }}</option>
+                    {% endfor %}
+                </select>
+
             </div>
             <div class="mb-3">
                 <label for=course class="form-label">Nom du contrôle</label>
