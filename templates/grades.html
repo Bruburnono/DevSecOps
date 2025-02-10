@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Notes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white shadow-md rounded-lg p-6 w-2/3">
+        <h2 class="text-2xl font-semibold mb-4 text-green-600">Notes de {{ student }}</h2>
+
+        <table class="w-full border-collapse border border-gray-300">
+            <thead>
+                <tr class="bg-green-500 text-white">
+                    <th class="p-3 border">Professeur</th>
+                    <th class="p-3 border">Étudiant</th>
+                    <th class="p-3 border">Matière</th>
+                    <th class="p-3 border">Note</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for grade in grades %}
+                <tr class="bg-gray-100 hover:bg-gray-200">
+                    <td class="p-3 border">{{ grade[0] }}</td>  <!-- Professeur -->
+                    <td class="p-3 border">{{ grade[1] }}</td>  <!-- Étudiant -->
+                    <td class="p-3 border">{{ grade[2] }}</td>  <!-- Matière -->
+                    <td class="p-3 border font-bold">{{ grade[3] }}</td>  <!-- Note -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="mt-4 flex gap-4">
+            <a href="{{ url_for('logout') }}" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
+                Déconnexion
+            </a>
+            <a href="{{ url_for('dashboard') }}" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                Retour Accueil
+            </a>
+        </div>
+    </div>
+</body>
+</html>
