@@ -225,7 +225,9 @@ def grades():
         cursor = mysql.connection.cursor()
         cursor.execute("SELECT teacher, student, subject, grade FROM grades WHERE student = %s", (user_data[2],))
         grades = cursor.fetchall()
-        return render_template("grades.html", grades=grades, student = user_data[2])
+        notes = [float(grade[3]) for grade in grades]
+        moyenne = sum(notes) / len(notes)
+        return render_template("grades.html", grades=grades, moyenne=moyenne, student = user_data[2])
     else:
         abort(403)
 
