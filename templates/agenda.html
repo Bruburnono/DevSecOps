@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly schedule</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Navbar -->
+    <nav class="bg-purple-600 p-4 text-white flex justify-between">
+        <h1 class="text-xl font-bold">Schedule</h1>
+        <div class="space-x-4">
+            <a href="/" class="hover:underline">Home</a>
+            <a href="/dashboard" class="hover:underline">Profil</a>
+            <a href="/logout" class="hover:underline">Logout</a>
+        </div>
+    </nav>
+
+    <!-- Conteneur principal -->
+    <div class="container mx-auto p-6">
+        <h2 class="text-2xl font-bold text-gray-800 text-center mb-6">Weekly schedule</h2>
+
+        <!-- Boutons de navigation entre les semaines -->
+        <div class="flex justify-between mb-4">
+            <button onclick="changerSemaine(-1)" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">⬅️ Previous week</button>
+            <h3 id="dateRange" class="text-lg font-semibold"></h3>
+            <button onclick="changerSemaine(1)" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">Next week ➡️</button>
+        </div>
+
+        <!-- Tableau du planning -->
+        <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+            <table class="min-w-full table-auto border-collapse">
+                <thead class="bg-purple-500 text-white">
+                    <tr>
+                        <th class="p-3 border">Hour</th>
+                        <th class="p-3 border" id="day1"></th>
+                        <th class="p-3 border" id="day2"></th>
+                        <th class="p-3 border" id="day3"></th>
+                        <th class="p-3 border" id="day4"></th>
+                        <th class="p-3 border" id="day5"></th>
+                        <th class="p-3 border" id="day6"></th>
+                        <th class="p-3 border" id="day7"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Génération des créneaux horaires -->
+                    <script>
+                        let tbody = "";
+                        for (let hour = 8; hour < 20; hour++) {
+                            tbody += `<tr class="text-center">
+                                <td class="p-3 border font-bold bg-gray-200">${hour}:00</td>`;
+                            for (let j = 0; j < 7; j++) {
+                                tbody += `<td class="p-3 border hover:bg-gray-100 cursor-pointer">
+                                            <button class="bg-green-500 text-white px-3 py-1 rounded-full text-sm hover:bg-green-600" onclick="ajouterEvenement()">+</button>
+                                          </td>`;
+                            }
+                            tbody += "</tr>";
+                        }
+                        document.write(tbody);
+                    </script>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal d'ajout d'événement -->
+    <div id="eventModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden">
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-lg font-bold mb-3">Add an event</h3>
+            <input type="text" id="eventName" placeholder="Nom de l'événement" class="border p-2 w-full mb-3">
+            <button onclick="fermerModal()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Cancel</button>
+            <button onclick="enregistrerEvenement()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600">Register</button>
+        </div>
+    </div>
+
+    <script>
+        let currentDate = new Date();
+        
+        function updateWeek() {
+            let startOfWeek = new Date(currentDate);
+            startOfWeek.setDate(currentDate.getDate() - currentDate.getDay() + 1); // Lundi de la semaine
+
+            let endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(startOfWeek.getDate() + 6); // Dimanche
+
+            document.getElementById("dateRange").innerText = 
+                startOfWeek.toLocaleDateString("fr-FR") + " - " + endOfWeek.toLocaleDateString("fr-FR");
+
+            let days = ["day1", "day2", "day3", "day4", "day5", "day6", "day7"];
+            for (let i = 0; i < 7; i++) {
+                let day = new Date(startOfWeek);
+                day.setDate(startOfWeek.getDate() + i);
+                document.getElementById(days[i]).innerText = day.toLocaleDateString("fr-FR", { weekday: 'long', day: '2-digit', month: '2-digit' });
+            }
+        }
+
+        function changerSemaine(direction) {
+            currentDate.setDate(currentDate.getDate() + direction * 7);
+            updateWeek();
+        }
+
+        function ajouterEvenement() {
+            document.getElementById('eventModal').classList.remove('hidden');
+        }
+
+        function fermerModal() {
+            document.getElementById('eventModal').classList.add('hidden');
+        }
+
+        function enregistrerEvenement() {
+            let eventName = document.getElementById('eventName').value;
+            if (eventName.trim() === '') {
+                alert('Veuillez entrer un nom d\'événement.');
+                return;
+            }
+            alert('Événement ajouté : ' + eventName);
+            fermerModal();
+        }
+
+        updateWeek(); // Initialise la semaine actuelle
+    </script>
+
+</body>
+</html>

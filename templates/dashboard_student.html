@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Étudiant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+    <!-- Navbar -->
+    <nav class="bg-blue-600 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="text-xl font-bold">Dashboard</div>
+            <div class="space-x-4">
+                <a href="/" class="hover:text-yellow-300">Home</a>
+                <a href="/logout" class="hover:text-yellow-300">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenu principal -->
+    <div class="main-content py-8">
+        <div class="container mx-auto">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Welcome, {{ user }} !</h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Card pour les notes -->
+                <div class="col-span-1">
+                    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+                        <div class="p-6">
+                            <h5 class="text-xl font-semibold text-gray-800 mb-4">Grades</h5>
+                            <p class="text-gray-600 mb-4">Check your latest ratings and reviews.</p>
+                            <a href="/grades"
+                               class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300">See notes</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card supplémentaire 1 -->
+                <div class="col-span-1">
+                    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+                        <div class="p-6">
+                            <h5 class="text-xl font-semibold text-gray-800 mb-4">Mailbox</h5>
+                            <p class="text-gray-600 mb-4">Check your messages</p>
+                            <a href="/mailbox"
+                               class="bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition duration-300">See the Mailbox</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card supplémentaire 2 -->
+                <div class="col-span-1">
+                    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+                        <div class="p-6">
+                            <h5 class="text-xl font-semibold text-gray-800 mb-4">Schedule</h5>
+                            <p class="text-gray-600 mb-4">Check your schedule and upcoming exams.</p>
+                            <a href="/agenda"
+                               class="bg-yellow-600 text-white py-2 px-4 rounded-lg hover:bg-yellow-700 transition duration-300">See the Schedule</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
