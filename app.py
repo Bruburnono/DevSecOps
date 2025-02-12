@@ -22,7 +22,7 @@ app.secret_key= b'\xe6\xe3\\\x0bp\xe6\x9f\xfcT\xfa\xa1\r<\xab\xf9\x1f\x87\xad\xb
 
 UPLOAD_FOLDER = 'API/static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg','pdf'}
 
 app.permanent_session_lifetime = timedelta(hours=1)  # Expiration après 1h d'inactivité
 
@@ -268,6 +268,51 @@ def mailbox():
     users = cursor.fetchall()
     cursor.close()
     return render_template('mailbox.html', messages=messages, users=users, username=blue[0])
+    
+@app.route('/devoirs', methods=['GET', 'POST'])
+def devoirs():
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT secret_key, role, username FROM honeypot WHERE secret_key = %s", (session.get('secret_key'),))
+    user = cursor.fetchone()    
+    if not user:
+        abort(403)
+    
+    if request.method == 'POST':
+        # Récupérer l'énoncé et le fichier
+        enon = request.form['enonce']
+        file = request.files['file']
+
+        # Si l'utilisateur n'a pas sélectionné de fichier ou que le fichier n'est pas valide
+        if file.filename == '':
+            return 'Aucun fichier sélectionné', 400
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(file_path)  # Enregistrer le fichier sur le serveur
+        
+            # Insérer le chemin du fichier et l'énoncé dans la base de données
+            cursor.execute("INSERT INTO devoirs (enonce, path) VALUES (%s, %s)", (enon, file_path))
+            mysql.connection.commit()
+
+    # Récupérer tous les devoirs (énoncé et chemin) après l'ajout
+    cursor.execute("SELECT enonce, path FROM devoirs")
+    devoirs = cursor.fetchall()  # Récupérer tous les devoirs
+    cursor.close()
+
+    # Renvoyer la page avec la liste mise à jour des devoirs
+    return render_template("devoir.html", devoirs=devoirs)
+
+@app.route('/devoirs_liste', methods=['GET'])
+def devoirs_liste():
+    if 'secret_key' not in session:
+        abort(403)
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT enonce, path FROM devoirs")
+    devoirs = cursor.fetchall()  # Récupérer tous les devoirs (énoncé et chemin)
+    cursor.close()
+
+    return render_template('devoir_student.html', devoirs=devoirs)
+
 
 @app.route('/agenda', methods=['GET'])
 def agenda():
