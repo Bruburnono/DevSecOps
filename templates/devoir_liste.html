@@ -58,12 +58,12 @@
             <tbody>
                 {% for devoir in devoirs %}
                 <tr>
-                    <td>{{ devoir[0] }}</td>  <!-- Enoncé -->
+                    <td>{{ devoir[0] }}</td>  
                     <td>
                         <a href="{{ url_for('static', filename='uploads/' + devoir[1].split('/')[-1]) }}" target="_blank">
                             Télécharger
                         </a>
-                    </td>  <!-- Lien vers le fichier -->
+                    </td>  
                 </tr>
                 {% endfor %}
             </tbody>
