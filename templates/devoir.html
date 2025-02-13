@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">  <!-- Change 'fr' to 'en' for English language -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ajouter un devoir</title>
+    <title>Add an Assignment</title>  <!-- "Ajouter un devoir" -> "Add an Assignment" -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         table {
@@ -29,49 +29,49 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/">home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/dashboard">Profil</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>  <!-- "home" -->
+                    <li class="nav-item"><a class="nav-link" href="/dashboard">Profile</a></li>  <!-- "Profil" -> "Profile" -->
+                    <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>  <!-- "Logout" -->
                 </ul>
             </div>
         </div>
     </nav>
     
     <div class="container mt-5 pt-4">
-        <h3>Ajouter un Devoir</h3>
+        <h3>Add an Assignment</h3>  <!-- "Ajouter un Devoir" -> "Add an Assignment" -->
         <form action="{{ url_for('devoirs') }}" method="POST" enctype="multipart/form-data">
             <div class="mb-3">
-                <label for="enonce" class="form-label">Énoncé</label>
+                <label for="enonce" class="form-label">Statement</label>  <!-- "Énoncé" -> "Statement" -->
                 <input type="text" class="form-control" id="enonce" name="enonce" required>
             </div>
             <div class="mb-3">
-                <label for="file" class="form-label">Fichier</label>
+                <label for="file" class="form-label">File</label>  <!-- "Fichier" -> "File" -->
                 <input type="file" class="form-control" id="file" name="file" required>
             </div>
-            <button type="submit" class="btn btn-primary">Ajouter</button>
+            <button type="submit" class="btn btn-primary">Add</button>  <!-- "Ajouter" -> "Add" -->
         </form>
     </div>
 
-    <!-- Liste des devoirs -->
+    <!-- List of assignments -->
     <div class="container mt-5">
-        <h3>Liste des Devoirs</h3>
+        <h3>List of Assignments</h3>  <!-- "Liste des Devoirs" -> "List of Assignments" -->
 
         <table class="table">
             <thead>
                 <tr>
-                    <th>Énoncé</th>
-                    <th>Téléchargement</th>
+                    <th>Statement</th>  <!-- "Énoncé" -> "Statement" -->
+                    <th>Download</th>  <!-- "Téléchargement" -> "Download" -->
                 </tr>
             </thead>
             <tbody>
                 {% for devoir in devoirs %}
                 <tr>
-                    <td>{{ devoir[0] }}</td>  <!-- Enoncé -->
+                    <td>{{ devoir[0] }}</td>  <!-- Statement -->
                     <td>
                         <a href="{{ url_for('static', filename='uploads/' + devoir[1].split('/')[-1]) }}" target="_blank">
-                            Télécharger
+                            Download
                         </a>
-                    </td>  <!-- Lien vers le fichier -->
+                    </td>  <!-- File Link -->
                 </tr>
                 {% endfor %}
             </tbody>
