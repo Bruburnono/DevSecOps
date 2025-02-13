@@ -1,0 +1,6 @@
+flask_mysqldb
+bcrypt
+secrets 
+string
+datetime
+werkzeug.utils 
