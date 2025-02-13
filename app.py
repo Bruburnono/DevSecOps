@@ -229,7 +229,7 @@ def grades():
             notes = [float(grade[3]) for grade in grades]
             moyenne = sum(notes) / len(notes)
         else:
-            moyenne = 0  # 
+            moyenne = 0  
         return render_template("grades.html", grades=grades, moyenne=moyenne, student = user_data[2])
     else:
         abort(403)
