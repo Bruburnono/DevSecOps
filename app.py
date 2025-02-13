@@ -20,7 +20,7 @@ mysql = MySQL(app)
 
 app.secret_key= b'\xe6\xe3\\\x0bp\xe6\x9f\xfcT\xfa\xa1\r<\xab\xf9\x1f\x87\xad\xb8\xf0\x17\x9f\x9c\xbd'
 
-UPLOAD_FOLDER = 'API/static/uploads'
+UPLOAD_FOLDER = 'static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg','pdf'}
 
@@ -225,8 +225,11 @@ def grades():
         cursor = mysql.connection.cursor()
         cursor.execute("SELECT teacher, student, subject, grade FROM grades WHERE student = %s", (user_data[2],))
         grades = cursor.fetchall()
-        notes = [float(grade[3]) for grade in grades]
-        moyenne = sum(notes) / len(notes)
+        if grades:
+            notes = [float(grade[3]) for grade in grades]
+            moyenne = sum(notes) / len(notes)
+        else:
+            moyenne = 0  # 
         return render_template("grades.html", grades=grades, moyenne=moyenne, student = user_data[2])
     else:
         abort(403)
@@ -276,31 +279,29 @@ def devoirs():
     user = cursor.fetchone()    
     if not user:
         abort(403)
-    
     if request.method == 'POST':
         # Récupérer l'énoncé et le fichier
         enon = request.form['enonce']
         file = request.files['file']
-
-        # Si l'utilisateur n'a pas sélectionné de fichier ou que le fichier n'est pas valide
-        if file.filename == '':
-            return 'Aucun fichier sélectionné', 400
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(file_path)  # Enregistrer le fichier sur le serveur
+            file_path = f'static/uploads/{filename}'.replace("\\", "/")
+        
         
             # Insérer le chemin du fichier et l'énoncé dans la base de données
             cursor.execute("INSERT INTO devoirs (enonce, path) VALUES (%s, %s)", (enon, file_path))
             mysql.connection.commit()
+         
 
-    # Récupérer tous les devoirs (énoncé et chemin) après l'ajout
+     #Récupérer tous les devoirs (énoncé et chemin) après l'ajout
     cursor.execute("SELECT enonce, path FROM devoirs")
     devoirs = cursor.fetchall()  # Récupérer tous les devoirs
     cursor.close()
-
-    # Renvoyer la page avec la liste mise à jour des devoirs
     return render_template("devoir.html", devoirs=devoirs)
+
+  
 
 @app.route('/devoirs_liste', methods=['GET'])
 def devoirs_liste():
@@ -310,8 +311,7 @@ def devoirs_liste():
     cursor.execute("SELECT enonce, path FROM devoirs")
     devoirs = cursor.fetchall()  # Récupérer tous les devoirs (énoncé et chemin)
     cursor.close()
-
-    return render_template('devoir_student.html', devoirs=devoirs)
+    return render_template('devoirs_liste.html', devoirs=devoirs)
 
 
 @app.route('/agenda', methods=['GET'])
