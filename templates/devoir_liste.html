@@ -47,12 +47,12 @@
 
     <!-- Liste des devoirs -->
     <div class="container mt-5">
-        <h3>Liste des Devoirs</h3>
+        <h3>List of Homework</h3>
         <table class="table">
             <thead>
                 <tr>
-                    <th>Énoncé</th>
-                    <th>Téléchargement</th>
+                    <th>the work to do</th>
+                    <th>Download</th>
                 </tr>
             </thead>
             <tbody>
@@ -61,7 +61,7 @@
                     <td>{{ devoir[0] }}</td>  
                     <td>
                         <a href="{{ url_for('static', filename='uploads/' + devoir[1].split('/')[-1]) }}" target="_blank">
-                            Télécharger
+                            Download
                         </a>
                     </td>  
                 </tr>
