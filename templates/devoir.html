@@ -29,18 +29,33 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/home">Accueil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/">Accueil</a></li>
                     <li class="nav-item"><a class="nav-link" href="/dashboard">Profil</a></li>
-              
                     <li class="nav-item"><a class="nav-link" href="/logout">Déconnexion</a></li>
                 </ul>
             </div>
         </div>
     </nav>
-<!-- Liste des devoirs -->
+    
+    <div class="container mt-5 pt-4">
+        <h3>Ajouter un Devoir</h3>
+        <form action="{{ url_for('devoirs') }}" method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="enonce" class="form-label">Énoncé</label>
+                <input type="text" class="form-control" id="enonce" name="enonce" required>
+            </div>
+            <div class="mb-3">
+                <label for="file" class="form-label">Fichier</label>
+                <input type="file" class="form-control" id="file" name="file" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Ajouter</button>
+        </form>
+    </div>
+
+    <!-- Liste des devoirs -->
     <div class="container mt-5">
-        <a href="{{ url_for('devoirs_liste') }}" ></a>
         <h3>Liste des Devoirs</h3>
+
         <table class="table">
             <thead>
                 <tr>
@@ -53,7 +68,7 @@
                 <tr>
                     <td>{{ devoir[0] }}</td>  <!-- Enoncé -->
                     <td>
-                        <a href="{{ url_for('static', filename='uploads/' + devoir[1].replace('\\', '/').split('/')[-1]) }}" target="_blank">
+                        <a href="{{ url_for('static', filename='uploads/' + devoir[1].split('/')[-1]) }}" target="_blank">
                             Télécharger
                         </a>
                     </td>  <!-- Lien vers le fichier -->
