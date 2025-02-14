@@ -5,8 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Admin</title>
+    <!-- Inclusion de Bootstrap pour le style -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        /* Styles généraux */
         body {
             background-color: #f4f6f9;
             font-family: Arial, sans-serif;
@@ -21,6 +23,7 @@
             text-align: center;
         }
 
+        /* Style du formulaire */
         .form-container {
             background-color: #fff;
             padding: 30px;
@@ -55,6 +58,7 @@
             background-color: #1a2125;
         }
 
+        /* Style des cartes */
         .card {
             border-radius: 10px;
         }
@@ -100,6 +104,7 @@
 </head>
 
 <body>
+    <!-- Barre de navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="#">Admin Dashboard</a>
@@ -114,9 +119,8 @@
     </nav>
 
     <div class="container">
+        <!-- Message de bienvenue avec le nom et le rôle de l'utilisateur -->
         <h2>Welcome, {{ users[0][0] }} ! You are {{ users[0][1] }}.</h2>
-        <br>
-        <br>
         <br>
         <div class="row">
             <!-- Formulaire pour ajouter un utilisateur -->
@@ -142,6 +146,7 @@
                 </div>
             </div>
             
+            <!-- Liste des utilisateurs avec options de modification et suppression -->
             <div class="col-md-8">
                 <h3>Users list</h3>
                 <table>
@@ -152,11 +157,13 @@
                             <th>New Username and Role</th>
                         </tr>
                     </thead>
+                    <tbody>
                         {% for user in users %}
                         <tr>
                             <td>{{ user[0] }}</td>
                             <td>{{ user[1] }}</td>
                             <td>
+                                <!-- Formulaire de modification -->
                                 <form action="/dashboard_admin" method="POST" style="display:inline;">
                                     <input type="hidden" name="action" value="modify">
                                     <input type="hidden" name="id" value="{{ user[0] }}">
@@ -164,6 +171,7 @@
                                     <input type="text" name="role" value="{{ user[1] }}" required>
                                     <button type="submit">Modify</button>
                                 </form>
+                                <!-- Formulaire de suppression -->
                                 <form action="/dashboard_admin" method="POST" style="display:inline;">
                                     <input type="hidden" name="action" value="delete">
                                     <input type="hidden" name="id" value="{{ user[0] }}">
@@ -178,6 +186,7 @@
         </div>
     </div>
 
+    <!-- Inclusion de Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
