@@ -5,18 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Étudiant</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com"></script> <!-- Importation de Tailwind CSS pour le style -->
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gray-100"> <!-- Arrière-plan gris clair -->
 
-    <!-- Navbar -->
+    <!-- Barre de navigation -->
     <nav class="bg-blue-600 text-white p-4">
         <div class="container mx-auto flex justify-between items-center">
-            <div class="text-xl font-bold">Dashboard</div>
+            <div class="text-xl font-bold">Dashboard</div> <!-- Titre du tableau de bord -->
             <div class="space-x-4">
-                <a href="/" class="hover:text-yellow-300">Home</a>
-                <a href="/logout" class="hover:text-yellow-300">Logout</a>
+                <a href="/" class="hover:text-yellow-300">Home</a> <!-- Lien vers la page d'accueil -->
+                <a href="/logout" class="hover:text-yellow-300">Logout</a> <!-- Lien pour se déconnecter -->
             </div>
         </div>
     </nav>
@@ -24,56 +24,69 @@
     <!-- Contenu principal -->
     <div class="main-content py-8">
         <div class="container mx-auto">
+            <!-- Message de bienvenue avec le nom de l'utilisateur -->
             <h2 class="text-2xl font-semibold text-gray-800 mb-6">Welcome, {{ user }} !</h2>
 
+            <!-- Grille contenant plusieurs cartes d'information -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Card pour les notes -->
+                
+                <!-- Carte pour les notes -->
                 <div class="col-span-1">
                     <div class="bg-white shadow-lg rounded-lg overflow-hidden">
                         <div class="p-6">
                             <h5 class="text-xl font-semibold text-gray-800 mb-4">Grades</h5>
                             <p class="text-gray-600 mb-4">Check your latest ratings and reviews.</p>
                             <a href="/grades"
-                               class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300">See notes</a>
+                               class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300">
+                               See notes
+                            </a> <!-- Bouton pour consulter les notes -->
                         </div>
                     </div>
                 </div>
 
-                <!-- Card supplémentaire 1 -->
+                <!-- Carte pour la boîte de réception -->
                 <div class="col-span-1">
                     <div class="bg-white shadow-lg rounded-lg overflow-hidden">
                         <div class="p-6">
                             <h5 class="text-xl font-semibold text-gray-800 mb-4">Mailbox</h5>
                             <p class="text-gray-600 mb-4">Check your messages</p>
                             <a href="/mailbox"
-                               class="bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition duration-300">See the Mailbox</a>
+                               class="bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition duration-300">
+                               See the Mailbox
+                            </a> <!-- Bouton pour consulter la boîte de réception -->
                         </div>
                     </div>
                 </div>
 
-                <!-- Card supplémentaire 2 -->
+                <!-- Carte pour l'emploi du temps -->
                 <div class="col-span-1">
                     <div class="bg-white shadow-lg rounded-lg overflow-hidden">
                         <div class="p-6">
                             <h5 class="text-xl font-semibold text-gray-800 mb-4">Schedule</h5>
                             <p class="text-gray-600 mb-4">Check your schedule and upcoming exams.</p>
                             <a href="/agenda"
-                               class="bg-yellow-600 text-white py-2 px-4 rounded-lg hover:bg-yellow-700 transition duration-300">See the Schedule</a>
+                               class="bg-yellow-600 text-white py-2 px-4 rounded-lg hover:bg-yellow-700 transition duration-300">
+                               See the Schedule
+                            </a> <!-- Bouton pour consulter l'emploi du temps -->
                         </div>
                     </div>
                 </div>
+
+                <!-- Carte pour les devoirs -->
                 <div class="col-span-1">
                     <div class="bg-white shadow-lg rounded-lg overflow-hidden">
                         <div class="p-6">
                             <h5 class="text-xl font-semibold text-gray-800 mb-4">Exercises</h5>
                             <p class="text-gray-600 mb-4">Do all your homework</p>
                             <a href="/devoirs_liste"
-                               class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-yellow-700 transition duration-300"> Regarder vos devoirs
-                            </a>
+                               class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-yellow-700 transition duration-300">
+                               Regarder vos devoirs
+                            </a> <!-- Bouton pour voir les devoirs -->
                         </div>
                     </div>
                 </div>
-            </div>
+
+            </div> <!-- Fin de la grille -->
         </div>
     </div>
 
