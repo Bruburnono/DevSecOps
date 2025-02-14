@@ -1,77 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">  <!-- Change 'fr' to 'en' for English language -->
+<html lang="en">  <!-- Définition de la langue de la page en anglais -->
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add an Assignment</title>  <!-- "Ajouter un devoir" -> "Add an Assignment" -->
+    <meta charset="UTF-8">  <!-- Encodage pour la prise en charge des caractères spéciaux -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  <!-- Adaptation pour les écrans mobiles -->
+    <title>Add an Assignment</title>  <!-- Titre de la page -->
+    
+    <!-- Importation de Bootstrap pour le style -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
+        /* Style de la table */
         table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: collapse; /* Suppression des bordures doubles */
         }
         table th, table td {
             padding: 10px;
-            border: 1px solid #ddd;
+            border: 1px solid #ddd; /* Bordure grise */
             text-align: left;
         }
         table th {
-            background-color: #f1f1f1;
+            background-color: #f1f1f1; /* Couleur de fond des en-têtes */
         }
     </style>
 </head>
+
 <body>
-    <!-- Navbar -->
+    <!-- Barre de navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
         <div class="container">
+            <!-- Bouton pour le menu responsive -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            
+            <!-- Liens de navigation -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>  <!-- "home" -->
-                    <li class="nav-item"><a class="nav-link" href="/dashboard">Profile</a></li>  <!-- "Profil" -> "Profile" -->
-                    <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>  <!-- "Logout" -->
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>  <!-- Lien vers la page d'accueil -->
+                    <li class="nav-item"><a class="nav-link" href="/dashboard">Profile</a></li>  <!-- Lien vers le profil -->
+                    <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>  <!-- Lien pour la déconnexion -->
                 </ul>
             </div>
         </div>
     </nav>
     
+    <!-- Conteneur principal -->
     <div class="container mt-5 pt-4">
-        <h3>Add an Assignment</h3>  <!-- "Ajouter un Devoir" -> "Add an Assignment" -->
+        <h3>Add an Assignment</h3>  <!-- Titre de la section -->
+        
+        <!-- Formulaire pour ajouter un devoir -->
         <form action="{{ url_for('devoirs') }}" method="POST" enctype="multipart/form-data">
             <div class="mb-3">
-                <label for="enonce" class="form-label">Statement</label>  <!-- "Énoncé" -> "Statement" -->
+                <label for="enonce" class="form-label">Statement</label>  <!-- Champ pour l'énoncé du devoir -->
                 <input type="text" class="form-control" id="enonce" name="enonce" required>
             </div>
             <div class="mb-3">
-                <label for="file" class="form-label">File</label>  <!-- "Fichier" -> "File" -->
+                <label for="file" class="form-label">File</label>  <!-- Champ pour le fichier -->
                 <input type="file" class="form-control" id="file" name="file" required>
             </div>
-            <button type="submit" class="btn btn-primary">Add</button>  <!-- "Ajouter" -> "Add" -->
+            <button type="submit" class="btn btn-primary">Add</button>  <!-- Bouton pour soumettre le formulaire -->
         </form>
     </div>
 
-    <!-- List of assignments -->
+    <!-- Liste des devoirs -->
     <div class="container mt-5">
-        <h3>List of Assignments</h3>  <!-- "Liste des Devoirs" -> "List of Assignments" -->
+        <h3>List of Assignments</h3>  <!-- Titre de la liste des devoirs -->
 
         <table class="table">
             <thead>
                 <tr>
-                    <th>Statement</th>  <!-- "Énoncé" -> "Statement" -->
-                    <th>Download</th>  <!-- "Téléchargement" -> "Download" -->
+                    <th>Statement</th>  <!-- Colonne pour l'énoncé du devoir -->
+                    <th>Download</th>  <!-- Colonne pour le lien de téléchargement -->
                 </tr>
             </thead>
             <tbody>
-                {% for devoir in devoirs %}
+                {% for devoir in devoirs %}  <!-- Boucle pour afficher les devoirs existants -->
                 <tr>
-                    <td>{{ devoir[0] }}</td>  <!-- Statement -->
+                    <td>{{ devoir[0] }}</td>  <!-- Affichage de l'énoncé du devoir -->
                     <td>
+                        <!-- Lien pour télécharger le fichier du devoir -->
                         <a href="{{ url_for('static', filename='uploads/' + devoir[1].split('/')[-1]) }}" target="_blank">
                             Download
                         </a>
-                    </td>  <!-- File Link -->
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
