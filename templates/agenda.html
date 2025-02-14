@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weekly schedule</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com"></script> <!-- Importation de Tailwind CSS -->
 </head>
 <body class="bg-gray-100">
 
@@ -45,7 +45,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Génération des créneaux horaires -->
+                    <!-- Génération automatique des créneaux horaires avec JavaScript -->
                     <script>
                         let tbody = "";
                         for (let hour = 8; hour < 20; hour++) {
@@ -58,14 +58,14 @@
                             }
                             tbody += "</tr>";
                         }
-                        document.write(tbody);
+                        document.write(tbody); // Insère le HTML généré dans la page
                     </script>
                 </tbody>
             </table>
         </div>
     </div>
 
-    <!-- Modal d'ajout d'événement -->
+    <!-- Modal d'ajout d'événement (fenêtre flottante) -->
     <div id="eventModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden">
         <div class="bg-white p-6 rounded-lg shadow-lg">
             <h3 class="text-lg font-bold mb-3">Add an event</h3>
@@ -76,18 +76,21 @@
     </div>
 
     <script>
-        let currentDate = new Date();
+        let currentDate = new Date(); // Variable pour stocker la date actuelle
         
+        // Fonction pour mettre à jour l'affichage de la semaine
         function updateWeek() {
             let startOfWeek = new Date(currentDate);
-            startOfWeek.setDate(currentDate.getDate() - currentDate.getDay() + 1); // Lundi de la semaine
+            startOfWeek.setDate(currentDate.getDate() - currentDate.getDay() + 1); // Obtenir le lundi de la semaine
 
             let endOfWeek = new Date(startOfWeek);
-            endOfWeek.setDate(startOfWeek.getDate() + 6); // Dimanche
+            endOfWeek.setDate(startOfWeek.getDate() + 6); // Obtenir le dimanche
 
+            // Mise à jour de l'affichage des dates de la semaine
             document.getElementById("dateRange").innerText = 
                 startOfWeek.toLocaleDateString("fr-FR") + " - " + endOfWeek.toLocaleDateString("fr-FR");
 
+            // Mise à jour des noms des jours de la semaine
             let days = ["day1", "day2", "day3", "day4", "day5", "day6", "day7"];
             for (let i = 0; i < 7; i++) {
                 let day = new Date(startOfWeek);
@@ -96,30 +99,34 @@
             }
         }
 
+        // Fonction pour changer de semaine (précédente ou suivante)
         function changerSemaine(direction) {
-            currentDate.setDate(currentDate.getDate() + direction * 7);
+            currentDate.setDate(currentDate.getDate() + direction * 7); // Ajoute ou retire 7 jours
             updateWeek();
         }
 
+        // Fonction pour afficher la fenêtre d'ajout d'événement
         function ajouterEvenement() {
             document.getElementById('eventModal').classList.remove('hidden');
         }
 
+        // Fonction pour fermer la fenêtre modale
         function fermerModal() {
             document.getElementById('eventModal').classList.add('hidden');
         }
 
+        // Fonction pour enregistrer un événement
         function enregistrerEvenement() {
-            let eventName = document.getElementById('eventName').value;
+            let eventName = document.getElementById('eventName').value; // Récupère le nom de l'événement
             if (eventName.trim() === '') {
                 alert('Veuillez entrer un nom d\'événement.');
                 return;
             }
-            alert('Événement ajouté : ' + eventName);
-            fermerModal();
+            alert('Événement ajouté : ' + eventName); // Affiche une alerte avec le nom de l'événement ajouté
+            fermerModal(); // Ferme la fenêtre modale
         }
 
-        updateWeek(); // Initialise la semaine actuelle
+        updateWeek(); // Initialise la semaine actuelle dès le chargement de la page
     </script>
 
 </body>
