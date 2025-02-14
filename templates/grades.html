@@ -1,15 +1,24 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    <!-- Définition du charset et de la vue pour le rendu responsive -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Titre de la page -->
     <title>Mes Notes</title>
+
+    <!-- Inclusion de Tailwind CSS pour la mise en forme -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
+    <!-- Navbar : Menu de navigation en haut de la page -->
     <nav class="bg-blue-600 text-white shadow-md p-4">
         <div class="container mx-auto flex justify-between items-center">
+            <!-- Titre de la page "Grades" -->
             <h1 class="text-xl font-bold">Grades</h1>
+
+            <!-- Liste des liens de navigation -->
             <ul class="flex space-x-6">
                 <li><a href="/" class="hover:underline">Home</a></li>
                 <li><a href="/dashboard" class="hover:underline">Profil</a></li>
@@ -18,20 +27,27 @@
         </div>
     </nav>
     
+    <!-- Conteneur principal pour les grades -->
     <div class="flex justify-center mt-4">
+        <!-- Carte contenant les informations des grades -->
         <div class="bg-white shadow-lg rounded-lg p-6 w-3/4">
+            <!-- Titre affichant les notes de l'étudiant -->
             <h3 class="text-center text-blue-600 font-bold text-xl mb-4">Grades of {{ student }}</h3>
+            
+            <!-- Table pour afficher les notes -->
             <div class="overflow-x-auto">
                 <table class="w-full border-collapse border border-gray-300 text-center">
                     <thead class="bg-blue-600 text-white">
                         <tr>
-                            <th class="p-3 border border-gray-300">Teacher</th>
-                            <th class="p-3 border border-gray-300">Student</th>
-                            <th class="p-3 border border-gray-300">Subject</th>
-                            <th class="p-3 border border-gray-300">Grade</th>
+                            <!-- En-têtes de colonnes -->
+                            <th class="p-3 border border-gray-300">Teacher</th>  <!-- Professeur -->
+                            <th class="p-3 border border-gray-300">Student</th>  <!-- Étudiant -->
+                            <th class="p-3 border border-gray-300">Subject</th>  <!-- Matière -->
+                            <th class="p-3 border border-gray-300">Grade</th>    <!-- Note -->
                         </tr>
                     </thead>
                     <tbody>
+                        <!-- Boucle pour afficher chaque note -->
                         {% for grade in grades %}
                         <tr class="bg-gray-100">
                             <td class="p-3 border border-gray-300">{{ grade[0] }}</td> <!-- Professeur -->
@@ -40,9 +56,11 @@
                             <td class="p-3 border border-gray-300">{{ grade[3] }}</td> <!-- Note -->
                         </tr>
                         {% endfor %}
+                        
+                        <!-- Ligne pour afficher la moyenne -->
                         <tr class="bg-gray-200 font-bold">
                             <td colspan="3" class="text-center p-3 border border-gray-300">Average :</td>
-                            <td class="p-3 border border-gray-300">{{ moyenne }}</td>
+                            <td class="p-3 border border-gray-300">{{ moyenne }}</td>  <!-- Moyenne des notes -->
                         </tr>
                     </tbody>
                 </table>
@@ -50,6 +68,7 @@
         </div>
     </div>
     
+    <!-- Inclusion de Bootstrap pour des fonctionnalités supplémentaires (comme le menu déroulant) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
