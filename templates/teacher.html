@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    <!-- Définition de l'encodage et de la viewport -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des Notes</title>
+    <!-- Inclusion de Tailwind CSS pour la mise en page et les styles -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
 
-    <!-- Navbar -->
+    <!-- Navbar : Menu de navigation -->
     <nav class="bg-gray-900 text-white shadow-md p-4">
         <div class="container mx-auto flex justify-between items-center">
+            <!-- Titre de la page (Gestion des notes) -->
             <a class="text-xl font-bold" href="#">Grade Management</a>
+            <!-- Liens de navigation -->
             <ul class="flex space-x-6">
                 <li><a href="/" class="hover:underline">Home</a></li>
                 <li><a href="/dashboard" class="hover:underline">Profile</a></li>
@@ -23,23 +27,29 @@
     <!-- Formulaire de mise à jour des notes -->
     <div class="max-w-2xl mx-auto mt-6 bg-white p-6 shadow-lg rounded-lg">
         <h2 class="text-xl font-bold text-gray-700 mb-4">Update grades</h2>
+        <!-- Formulaire POST pour mettre à jour les notes -->
         <form action="{{ url_for('teacher') }}" method="POST">
+            <!-- Sélection de l'élève -->
             <div class="mb-4">
                 <label for="student" class="block text-gray-700 font-medium">Student :</label>
                 <select id="student" name="student" class="w-full mt-2 p-2 border rounded-lg">
+                    <!-- Affichage dynamique des élèves -->
                     {% for student in students %}
                         <option value="{{ student }}">{{ student }}</option>
                     {% endfor %}
                 </select>
             </div>
+            <!-- Champ pour le sujet -->
             <div class="mb-4">
                 <label for="course" class="block text-gray-700 font-medium">Subject</label>
                 <input type="text" class="w-full mt-2 p-2 border rounded-lg" id="course" name="course">
             </div>
+            <!-- Champ pour la note -->
             <div class="mb-4">
                 <label for="grade" class="block text-gray-700 font-medium">Grade</label>
                 <input type="number" class="w-full mt-2 p-2 border rounded-lg" id="grade" name="grade" min="0" max="20" step="0.5">
             </div>
+            <!-- Bouton pour enregistrer la note -->
             <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700">Register</button>
         </form>
     </div>
@@ -49,20 +59,22 @@
         <div class="bg-white shadow-lg rounded-lg p-6 w-3/4">
             <h3 class="text-center text-blue-600 font-bold text-xl mb-4">Grades</h3>
             <div class="overflow-x-auto">
+                <!-- Tableau des notes des étudiants -->
                 <table class="w-full border-collapse border border-gray-300 text-center">
                     <thead class="bg-green-600 text-white">
                         <tr>
-                            <th class="p-3 border border-gray-300">Student</th>
-                            <th class="p-3 border border-gray-300">Subject</th>
-                            <th class="p-3 border border-gray-300">Grade</th>
+                            <th class="p-3 border border-gray-300">Student</th> <!-- Nom de l'élève -->
+                            <th class="p-3 border border-gray-300">Subject</th> <!-- Sujet -->
+                            <th class="p-3 border border-gray-300">Grade</th> <!-- Note -->
                         </tr>
                     </thead>
                     <tbody>
+                        <!-- Boucle sur les notes pour afficher les informations -->
                         {% for grade in grades %}
                         <tr class="bg-gray-100">
-                            <td class="p-3 border border-gray-300">{{ grade[0] }}</td>
-                            <td class="p-3 border border-gray-300">{{ grade[1] }}</td>
-                            <td class="p-3 border border-gray-300 font-bold">{{ grade[2] }}</td>
+                            <td class="p-3 border border-gray-300">{{ grade[0] }}</td> <!-- Nom de l'élève -->
+                            <td class="p-3 border border-gray-300">{{ grade[1] }}</td> <!-- Sujet -->
+                            <td class="p-3 border border-gray-300 font-bold">{{ grade[2] }}</td> <!-- Note -->
                         </tr>
                         {% endfor %}
                     </tbody>
