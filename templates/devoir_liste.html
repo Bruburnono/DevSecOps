@@ -1,38 +1,51 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    <!-- Définition du charset et de la vue pour le rendu responsive -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Titre de la page -->
     <title>Ajouter un devoir</title>
+
+    <!-- Inclusion de la feuille de style Bootstrap pour la mise en forme -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
     <style>
-        h3{
+        /* Styles spécifiques pour le titre h3 */
+        h3 {
             margin-top: 100px;
         }
+
+        /* Styles pour la table */
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
+
         table th, table td {
             padding: 10px;
             border: 1px solid #ddd;
             text-align: left;
-           
         }
+
+        /* Styles pour les en-têtes de table */
         table th {
             background-color: #f1f1f1;
-            
         }
     </style>
 </head>
 <body>
-    <!-- Navbar -->
+    <!-- Navbar : Menu de navigation en haut de la page -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
         <div class="container">
+            <!-- Bouton de menu pour les écrans petits (mobile) -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
+            <!-- Liens de navigation (en haut à droite de la page) -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="/">home</a></li>
@@ -43,23 +56,26 @@
         </div>
     </nav>
     
-    </div>
-
-    <!-- Liste des devoirs -->
+    <!-- Section de liste des devoirs -->
     <div class="container mt-5">
         <h3>List of Homework</h3>
+        <!-- Table pour afficher la liste des devoirs -->
         <table class="table">
             <thead>
                 <tr>
+                    <!-- En-têtes de colonnes pour "Le travail à faire" et "Télécharger" -->
                     <th>the work to do</th>
                     <th>Download</th>
                 </tr>
             </thead>
             <tbody>
+                <!-- Boucle pour afficher chaque devoir dans la table -->
                 {% for devoir in devoirs %}
                 <tr>
+                    <!-- Affichage du nom du devoir -->
                     <td>{{ devoir[0] }}</td>  
                     <td>
+                        <!-- Lien pour télécharger le devoir -->
                         <a href="{{ url_for('static', filename='uploads/' + devoir[1].split('/')[-1]) }}" target="_blank">
                             Download
                         </a>
