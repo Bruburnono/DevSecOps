@@ -1,57 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Définition du charset et de la vue pour un rendu responsive -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Titre de la page -->
     <title>Home</title>
+
+    <!-- Inclusion de Tailwind CSS pour la mise en forme -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <!-- Bootstrap CSS -->
+
+    <!-- Inclusion de Bootstrap CSS pour les styles complémentaires -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJXj0fLf6Xbq5bhTcIDMtd5w9qp7HXu82evUuDJIYcMoQw/TT5dt5eN9gC30" crossorigin="anonymous">
 
-    <!-- Bootstrap JS (optional, for interactive elements like carousels) -->
+    <!-- Bootstrap JS (optionnel, pour les éléments interactifs comme les carrousels) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pzjw8f+ua7Kw1TIq0v8Fq8sZ1ZlmUg2rH0q8P/12GL6E+Pv5fWZglwfmvhjR1vKF" crossorigin="anonymous"></script>
 
+    <!-- Inclusion de Alpine.js pour l'interactivité légère -->
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.js" defer></script>
 </head>
 <body class="bg-blue-100">
 
-    <!-- Navbar -->
+    <!-- Navbar : Menu de navigation en haut de la page -->
     <nav class="bg-blue-600 p-4">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <!-- Logo et nom de l'application -->
             <a href="/" class="text-white text-2xl font-bold">ProNul</a>
+
+            <!-- Liens de navigation (Login et Profile) -->
             <a href="/login" class="text-white px-4 py-2 bg-black-700 rounded-lg hover:bg-black-800 focus:outline-none focus:ring-2 focus:ring-black-400">Login</a>
             <a href="/dashboard" class="text-white px-4 py-2 bg-black-700 rounded-lg hover:bg-black-800 focus:outline-none focus:ring-2 focus:ring-black-400">Profile</a>
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Hero Section : Section principale d'introduction -->
     <div class="mt-12 max-w-7xl mx-auto text-center">
         <h1 class="text-4xl font-bold text-blue-600">Welcome To Our Study API</h1>
         <p class="mt-4 text-lg text-gray-600">Explore our features and learn more about our services.</p>
     </div>
 
+    <!-- Section des articles récents -->
     <div class="container mx-auto mt-10">
         <h1 class="text-4xl font-bold text-center mb-6">📢 Articles Récents</h1>
     
+        <!-- Grille responsive pour les articles -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Boucle pour afficher chaque article -->
             {% for article in articles %}
             <div class="bg-white p-6 rounded-lg shadow-lg">
+                <!-- Titre de l'article -->
                 <h2 class="text-2xl font-bold">{{ article[0] }}</h2>
+                <!-- Détails de l'article (auteur et date) -->
                 <p class="text-gray-600 text-sm mb-2">Par {{ article[2] }} - {{ article[3] }}</p>
     
+                <!-- Affichage de l'image de l'article si elle existe -->
                 {% if article[4] %}
                 <img src="{{ article[4] }}" alt="Image de l'article" class="w-full h-48 object-cover rounded-lg mb-4">
                 {% endif %}
     
+                <!-- Extrait du contenu de l'article -->
                 <p class="text-gray-700">{{ article[1][:200] }}...</p>
             </div>
             {% endfor %}
         </div>
     </div>
-    
-    
-  
-    <!-- Footer -->
+
+    <!-- Footer : Pied de page -->
     <footer class="mt-12 bg-blue-600 text-white text-center py-4">
         <p>&copy; 2025 MyApp. All rights reserved.</p>
     </footer>
