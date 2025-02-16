@@ -185,18 +185,14 @@ def teacher():
     if 'secret_key' not in session:
         return abort(403)
     session_secret_key = session['secret_key']
-    print(session_secret_key)
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT secret_key, role, username FROM honeypot WHERE secret_key = %s", (session_secret_key,))
     user_data = cursor.fetchone()
-    cursor.execute("SELECT student, subject, grade FROM grades WHERE teacher = %s", (user_data[2],))
-    grades = cursor.fetchall()
     cursor.close()
     if user_data and user_data[1] in ['teacher', 'admin']:
         if request.method == 'POST':
             value = request.form.get('val')  # Retourne None si 'val' n'est pas trouvé
             if value == 'add':
-                print("Formulaire soumis")
                 student = request.form['student']
                 subject = request.form['course'] 
                 note = request.form['grade']
@@ -204,18 +200,33 @@ def teacher():
                 cursor.execute("INSERT INTO grades (teacher,student,subject,grade) VALUES (%s, %s, %s, %s)", (user_data[2], student, subject, note))
                 mysql.connection.commit()
                 cursor.close()
+                flash("Grade successfully added!", "success")
                 return redirect(url_for('teacher'))
-            if value =="modify":
-                student = request.form['student']
-                subject = request.form['course'] 
-                note = request.form['grade']
+            if value == "modify":
+                student = request.form['update_student']
+                subject = request.form['update_course']
+                note = request.form['update_grade']
+                grade_id = request.form['update_id']
                 cursor = mysql.connection.cursor()
-                cursor.execute("UPDATE grades SET grade = %s, subject = %s WHERE username = %s", (note, subject, student))
-
+                cursor.execute("UPDATE grades SET grade = %s, subject = %s, student = %s WHERE id = %s", (note, subject, student, grade_id))
+                mysql.connection.commit()
+                cursor.close()
+                flash("Grade successfully updated!", "success")
+                return redirect(url_for('teacher'))
+            if value == 'delete':
+                grade_id = request.form['delete_id']
+                cursor = mysql.connection.cursor()
+                cursor.execute("DELETE FROM grades WHERE id=%s", (grade_id,))
+                mysql.connection.commit()
+                cursor.close()
+                flash("Grade successfully deleted!", "success")
+                return redirect(url_for('teacher'))
         cursor = mysql.connection.cursor()
         cursor.execute("SELECT username FROM honeypot WHERE role = 'student'")
         students = cursor.fetchall()
         student_list = [student[0] for student in students]
+        cursor.execute("SELECT student, subject, grade, id FROM grades WHERE teacher = %s", (user_data[2],))
+        grades = cursor.fetchall()
         cursor.close() 
         return render_template("teacher.html", students = student_list, grades = grades) 
     else:
