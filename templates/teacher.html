@@ -50,7 +50,7 @@
                 <input type="number" class="w-full mt-2 p-2 border rounded-lg" id="grade" name="grade" min="0" max="20" step="0.5">
             </div>
             <!-- Bouton pour enregistrer la note -->
-            <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700">Register</button>
+            <button type="submit" name="val" value="add" class="w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700">Register</button>
         </form>
     </div>
 
@@ -63,18 +63,42 @@
                 <table class="w-full border-collapse border border-gray-300 text-center">
                     <thead class="bg-green-600 text-white">
                         <tr>
-                            <th class="p-3 border border-gray-300">Student</th> <!-- Nom de l'élève -->
-                            <th class="p-3 border border-gray-300">Subject</th> <!-- Sujet -->
-                            <th class="p-3 border border-gray-300">Grade</th> <!-- Note -->
+                            <th class="p-3 border border-gray-300">Student</th>
+                            <th class="p-3 border border-gray-300">Subject</th>
+                            <th class="p-3 border border-gray-300">Grade</th>
+                            <th class="p-3 border border-gray-300">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <!-- Boucle sur les notes pour afficher les informations -->
                         {% for grade in grades %}
                         <tr class="bg-gray-100">
-                            <td class="p-3 border border-gray-300">{{ grade[0] }}</td> <!-- Nom de l'élève -->
-                            <td class="p-3 border border-gray-300">{{ grade[1] }}</td> <!-- Sujet -->
-                            <td class="p-3 border border-gray-300 font-bold">{{ grade[2] }}</td> <!-- Note -->
+                            <form action="{{ url_for('teacher') }}" method="POST" class="flex w-full">
+                                <td class="p-3 border border-gray-300">
+                                    <select name="update_student" class="border rounded-lg p-1">
+                                        {% for student in students %}
+                                        <option value="{{ student }}" {% if student == grade[0] %}selected{% endif %}>
+                                            {{ student }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td class="p-3 border border-gray-300">
+                                    <input type="text" name="update_course" value="{{ grade[1] }}" required class="border rounded-lg p-1">
+                                </td>
+                                <td class="p-3 border border-gray-300">
+                                    <input type="number" name="update_grade" value="{{ grade[2] }}" min="0" max="20" step="0.5" 
+                                           class="border rounded-lg p-1 w-16 text-center font-bold">
+                                </td>
+                                <td class="p-3 border border-gray-300 flex items-center space-x-2">
+                                    <input type="hidden" name="update_id" value="{{ grade[3] }}">
+                                    <button type="submit" name="val" value="modify" class="bg-blue-500 text-white px-3 py-1 rounded-lg">Modify</button>
+                                    </form> <!-- Ferme le formulaire ici pour qu'il soit bien intégré en ligne -->
+                                    <form action="{{ url_for('teacher') }}" method="POST">
+                                        <input type="hidden" name="delete_id" value="{{ grade[3] }}">
+                                        <button type="submit" name="val" value="delete" class="bg-red-500 text-white px-3 py-1 rounded-lg">Delete</button>
+                                    </form>
+                                </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -82,6 +106,30 @@
             </div>
         </div>
     </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div id="flash-messages" class="mb-4">
+            {% for category, message in messages %}
+                <div class="p-3 mb-2 rounded-lg text-white 
+                    {% if category == 'success' %} bg-green-500 {% elif category == 'danger' %} bg-red-500 {% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Script pour masquer les messages après 5 secondes -->
+        <script>
+            setTimeout(function() {
+                var flashMessages = document.getElementById("flash-messages");
+                if (flashMessages) {
+                    flashMessages.style.transition = "opacity 0.5s";
+                    flashMessages.style.opacity = "0";
+                    setTimeout(() => flashMessages.remove(), 500);
+                }
+            }, 5000);
+        </script>
+    {% endif %}
+{% endwith %}   
 
 </body>
 </html>
